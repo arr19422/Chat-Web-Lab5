@@ -1,0 +1,280 @@
+<html>
+<body>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="application/javascript">
+
+    document.body.style.backgroundImage = 'url("http://puntlandtvradio.net/images/background/body-bg.png")'
+    document.body.style.backgroundAttachment = 'fixed'
+    document.body.style.size = 'cover'
+    // declaraciones
+    var listaDeMensajes = document.createElement('ul')
+    var div1 = document.createElement('div')
+    var input = document.createElement('input')
+    var button = document.createElement('button')
+    var i = document.createElement('i')
+
+    // Estilos del div
+    div1.style.top = '80%'
+    div1.style.left = '-5%'
+    div1.style.width = '105%'
+    div1.style.height = '25%'
+    div1.style.border = 'solid #818D7D'
+    div1.style.position = 'fixed'
+    div1.style.backgroundColor = '#C8A69E'
+    div1.style.backgroundImage = 'url("http://i.stack.imgur.com/oslRB.png")'
+
+
+    // Estilos del Input
+    input.style.backgroundColor = '#A8918C'
+    input.style.width = '500px'
+    input.style.height = '60px'
+    input.style.position = 'fixed'
+    input.maxLength = '140'
+    input.style.top = '86%'
+    input.style.left = '25%'
+    input.style.fontSize = '20px'
+
+    // evento del input
+    input.addEventListener('keyup', () => {
+      if (event.keyCode === 13) {
+        fetch('http://ubeje.xyz:3000/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            sender: "Diego",
+            message: input.value,
+            date: new Date().toLocaleString(),
+          }) 
+        }).then(() => {
+          input.value = ''
+          // evento para recargar lo que esta dentro del body
+          listaDeMensajes.remove();
+          listaDeMensajes = document.createElement('ul')
+          listaDeMensajes.style.listStyleType = 'none'
+          listaDeMensajes.style.margin = '80px 50px'
+          document.body.append(listaDeMensajes)
+          var lista = []
+
+          // evento de obtencion de mensaje
+          fetch('http://ubeje.xyz:3000/messages').then((r) => {
+            return r.json()
+          }).then((j) => {
+            j.forEach((mensaje) => {
+              const unMensaje = document.createElement('li')
+              // estilos de li
+              unMensaje.style.borderColor = 'red'
+              unMensaje.style.border = 'solid #818D7D'
+              unMensaje.style.borderRadius = '5%'
+              unMensaje.style.margin = '50px 50px'
+              unMensaje.style.padding = '0px 30px'
+              unMensaje.style.wordWrap = 'break-word'
+              unMensaje.style.fontSize = '15px'
+              unMensaje.style.fontFamily = 'Roboto'
+              unMensaje.style.backgroundImage = 'url("https://coderwall-assets-0.s3.amazonaws.com/uploads/picture/file/1410/noise-bg.png")'
+              // creacion y estilos de h1
+              const h1 = document.createElement('h1')
+              h1.style.textDecoration = 'underline'
+              h1.style.color = '#183B68'
+              h1.append(mensaje.sender)
+
+              // try catch para ver si es una imagen
+              try {
+                var separador = mensaje.message.split(".")
+                if ((separador[separador.length - 1] === 'jpg') || (separador[separador.length - 1] === 'jpeg') ||
+                  (separador[separador.length - 1] === 'png') || (separador[separador.length - 1] === 'svg') ||
+                  (separador[separador.length - 1] === 'gif')) {
+                  // creacion y estilos de la imagen
+                  const img = document.createElement('img')
+                  img.src = mensaje.message
+                  img.alt = ''
+                  img.style.maxHeight = '300px'
+                  img.style.maxWidth = '300px'
+                  img.style.margin = '15px'
+                  unMensaje.append(h1)
+                  unMensaje.append(img)
+                } else {
+                  // creacion y estilos del h2
+                  const h2 = document.createElement('h2')
+                  h2.append(mensaje.message)
+                  unMensaje.append(h1)
+                  unMensaje.append(h2)
+                }
+              } catch (error) {
+                // error
+              }
+              lista.push(unMensaje)
+            })
+            var listaOrd = lista.reverse()
+            listaOrd.forEach(element => {
+              listaDeMensajes.append(element)
+            });
+          })
+        })
+      }
+    })
+
+    // Estilos del boton
+    i.className = 'fa fa-send'
+    button.append(i)
+    button.style.position = 'fixed'
+    button.style.top = '86%'
+    button.style.right = '30%'
+    button.style.padding = '15px 30px'
+    button.style.backgroundColor = '#B0D3A6'
+    button.style.textAlign = 'center'
+    button.style.borderColor = 'solid #4CAF50'
+    button.style.width = '100px'
+    button.style.height = '60px'
+
+    //append al div
+    div1.append(input)
+    div1.append(button)
+    document.body.append(div1)
+
+    // evento del boton
+    button.addEventListener('click', () => {
+      fetch('http://ubeje.xyz:3000/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: "Diego",
+          message: input.value,
+          date: new Date().toLocaleString(),
+        })
+      }).then(() => {
+        input.value = ''
+        // evento para recargar lo que esta dentro del body
+        listaDeMensajes.remove();
+        listaDeMensajes = document.createElement('ul')
+        listaDeMensajes.style.listStyleType = 'none'
+        listaDeMensajes.style.margin = '80px 50px'
+        document.body.append(listaDeMensajes)
+        var lista = []
+
+        // evento de obtencion de mensaje
+        fetch('http://ubeje.xyz:3000/messages').then((r) => {
+          return r.json()
+        }).then((j) => {
+          j.forEach((mensaje) => {
+            const unMensaje = document.createElement('li')
+            // estilos de li
+            unMensaje.style.borderColor = 'red'
+            unMensaje.style.border = 'solid #818D7D'
+            unMensaje.style.borderRadius = '5%'
+            unMensaje.style.margin = '50px 50px'
+            unMensaje.style.padding = '0px 30px'
+            unMensaje.style.wordWrap = 'break-word'
+            unMensaje.style.fontSize = '15px'
+            unMensaje.style.fontFamily = 'Roboto'
+            unMensaje.style.backgroundImage = 'url("https://coderwall-assets-0.s3.amazonaws.com/uploads/picture/file/1410/noise-bg.png")'
+            // creacion y estilos de h1
+            const h1 = document.createElement('h1')
+            h1.style.textDecoration = 'underline'
+            h1.style.color = '#183B68'
+            h1.append(mensaje.sender)
+
+            // try catch para ver si es una imagen
+            try {
+              var separador = mensaje.message.split(".")
+              if ((separador[separador.length - 1] === 'jpg') || (separador[separador.length - 1] === 'jpeg') ||
+                (separador[separador.length - 1] === 'png') || (separador[separador.length - 1] === 'svg') ||
+                (separador[separador.length - 1] === 'gif')) {
+                // creacion y estilos de la imagen
+                const img = document.createElement('img')
+                img.src = mensaje.message
+                img.alt = ''
+                img.style.maxHeight = '300px'
+                img.style.maxWidth = '300px'
+                img.style.margin = '15px'
+                unMensaje.append(h1)
+                unMensaje.append(img)
+              } else {
+                // creacion y estilos del h2
+                const h2 = document.createElement('h2')
+                h2.append(mensaje.message)
+                unMensaje.append(h1)
+                unMensaje.append(h2)
+              }
+            } catch (error) {
+              // error
+            }
+            lista.push(unMensaje)
+          })
+          var listaOrd = lista.reverse()
+          listaOrd.forEach(element => {
+            listaDeMensajes.append(element)
+          });
+
+        })
+      })
+    })
+
+    // estilos del ul
+    listaDeMensajes = document.createElement('ul')
+    listaDeMensajes.style.listStyleType = 'none'
+    listaDeMensajes.style.margin = '80px 50px'
+    document.body.append(listaDeMensajes)
+    var lista = []
+
+    // evento de obtencion de mensaje
+    fetch('http://ubeje.xyz:3000/messages').then((r) => {
+      return r.json()
+    }).then((j) => {
+      j.forEach((mensaje) => {
+        const unMensaje = document.createElement('li')
+        // estilos de li
+        unMensaje.style.borderColor = 'red'
+        unMensaje.style.border = 'solid #818D7D'
+        unMensaje.style.borderRadius = '5%'
+        unMensaje.style.margin = '50px 50px'
+        unMensaje.style.padding = '0px 30px'
+        unMensaje.style.wordWrap = 'break-word'
+        unMensaje.style.fontSize = '15px'
+        unMensaje.style.fontFamily = 'Roboto'
+        unMensaje.style.backgroundImage = 'url("https://coderwall-assets-0.s3.amazonaws.com/uploads/picture/file/1410/noise-bg.png")'
+        // creacion y estilos de h1
+        const h1 = document.createElement('h1')
+        h1.style.textDecoration = 'underline'
+        h1.style.color = '#183B68'
+        h1.append(mensaje.sender)
+
+        // try catch para ver si es una imagen
+        try {
+          var separador = mensaje.message.split(".")
+          if ((separador[separador.length - 1] === 'jpg') || (separador[separador.length - 1] === 'jpeg') ||
+            (separador[separador.length - 1] === 'png') || (separador[separador.length - 1] === 'svg') ||
+            (separador[separador.length - 1] === 'gif')) {
+            // creacion y estilos de la imagen
+            const img = document.createElement('img')
+            img.src = mensaje.message
+            img.alt = ''
+            img.style.maxHeight = '300px'
+            img.style.maxWidth = '300px'
+            img.style.margin = '15px'
+            unMensaje.append(h1)
+            unMensaje.append(img)
+          } else {
+            // creacion y estilos del h2
+            const h2 = document.createElement('h2')
+            h2.append(mensaje.message)
+            unMensaje.append(h1)
+            unMensaje.append(h2)
+          }
+        } catch (error) {
+          // error
+        }
+        lista.push(unMensaje)
+      })
+      //append de los mensajes
+      var listaOrd = lista.reverse()
+      listaOrd.forEach(element => {
+        listaDeMensajes.append(element)
+      });
+    })
+  </script>
+</body>
+</html>
